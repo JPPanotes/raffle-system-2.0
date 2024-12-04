@@ -1,0 +1,24 @@
+window.addEventListener('beforeunload', function (event) {
+    // Customize the confirmation message
+    const confirmationMessage = "Are you sure you want to leave? The raffle system will stop if you refresh or close the page.";
+
+    // Conditionally show the "Reload" option based on your preference
+    event.returnValue = confirmationMessage; // Standard for most browsers
+
+    // Uncomment the line below if you want to show the "Reload" option for some browsers
+    // return confirmationMessage; // For some older browsers
+
+    // Returning nothing (or returning undefined) usually prevents the "Reload" option in modern browsers
+    // return undefined; 
+});
+
+// Optionally, you can also prevent page navigation via the keyboard shortcut
+window.addEventListener('keydown', function (event) {
+    if (event.key === 'F5' || (event.ctrlKey && event.key === 'r')) {
+        event.preventDefault(); // Cancel the refresh
+    }
+});
+
+window.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});

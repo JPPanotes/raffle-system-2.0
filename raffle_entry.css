@@ -1,0 +1,367 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+/* General Styling */
+body {
+  margin: 0;
+  font-family: 'Aclonica', sans-serif;
+}
+
+/* Background Styling */
+.background-image-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("xmasbackground3.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0.8;
+  z-index: -1;
+}
+
+/* Flexbox Container for Layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  z-index: 1;
+}
+
+/* Logo Styling */
+.raffle_logo {
+  max-width: 100%;
+  height: 200px;
+  margin-top: 50px;
+  z-index: 1;
+}
+
+
+/* Scroll Label Styling */
+.scroll-label {
+  font-family: 'Amatic SC', cursive;
+  font-size: 90px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Aclonica', sans-serif;
+  margin-bottom: 60px;
+  text-align: center;
+  text-shadow: 8px 8px #000; /* Gold shadow for holiday sparkle */
+  z-index: 1;
+}
+
+/* Upload File Button Styling */
+.custom-file-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 20px;
+  width: auto;
+}
+
+.custom-file-upload:hover {
+  background-color: #2980b9;
+  color: #fff;
+}
+
+/* Start/Stop Button Styling */
+#animation-control {
+  font-size: 20px;
+  padding: 15px 30px;
+  background-color: #D6001C;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  animation: glowing 1300ms infinite;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+#animation-control:hover {
+  background-color: #960014;
+}
+
+/* Keyframes for Button Glow Effect */
+@keyframes glowing {
+  0% { background-color: #D6001C; box-shadow: 0 0 5px #D6001C; }
+  50% { background-color: #E3001E; box-shadow: 0 0 20px #E3001E; }
+  100% { background-color: #BD0019; box-shadow: 0 0 5px #BD0019; }
+}
+
+/* Dropdown Container Styling */
+.dropdown-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.custom-select {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  width: 180px;
+  z-index: 1;
+  text-align: left;
+  margin-bottom: 150px;
+}
+
+.custom-select select {
+  display: none; /* Hide the original SELECT element */
+}
+
+/* Style for Selected Dropdown */
+.select-selected {
+  background-color: DodgerBlue;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  position: relative;
+}
+
+/* Arrow inside the select box */
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+
+/* Open Arrow Style */
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+
+/* Options Styling */
+.select-items div,
+.select-selected {
+  color: #ffffff;
+  padding: 8px 16px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+}
+
+/* Options Background */
+.select-items {
+  position: absolute;
+  background-color: DodgerBlue;
+  bottom: 100%; /* Position the options above the dropdown */
+  left: 0;
+  right: 0;
+  z-index: 99;
+  margin-bottom: 5px; /* Add some spacing between the button and options */
+  border-radius: 4px; /* Keep rounded corners */
+}
+
+
+
+/* Hide Dropdown when Closed */
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover,
+.same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dropdown-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .custom-select {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .raffle_logo {
+    width: 100%;
+  }
+
+  .scroll-label {
+    font-size: 14px;
+    z-index: 1;
+  }
+
+  .custom-file-upload {
+    font-size: 12px;
+    padding: 8px;
+    width: 90%;
+  }
+
+  #animation-control {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .custom-select {
+    width: 100%;
+  }
+}
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  top: 400px; 
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  position: absolute;
+  height: 30px;
+  width: 280px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: #000;
+  z-index: 1;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.custom-file-upload:hover {
+  background-color: #2980b9; /* Slightly darker blue on hover */
+  
+  }
+
+  .congrats pre{
+    max-height: 150px;
+    margin-top: -50px;
+    }
+
+    .winner-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 200px;
+
+    max-height: calc(100vh - 200px); /* Prevent overlapping other elements */
+  }
+  
+  .winner-slot.pre-animation {
+    opacity: 0;
+    transform: scale(0.5); /* Initial state */
+}
+.winner-slot.animate-in {
+  animation: slot-fade-in 0.5s ease forwards;
+}
+
+@keyframes slot-fade-in {
+  to {
+      opacity: 1;
+      transform: scale(1); /* Final state */
+  }
+}
+.winner-slot {
+  /* Set default values */
+  width: 15vw; /* Adjust slot size for responsive layout */
+  height: 12vw;
+  background: linear-gradient(360deg, #002a53, #0074D9);
+  border: 2px solid #000;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: transform 0.6s, background-color 0.3s, width 0.3s, height 0.3s;
+  z-index: 1;
+}
+  
+  .slot-number {
+    font-size: 1vw;
+      color: #fff;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-weight: bold;
+  }
+  
+  .slot-text {
+    font-size: 1.5vw; /* Adjust text size for responsiveness */
+    color: #ffffff;
+    transition: font-size 0.3s; /* Smooth transition for text size */
+}
+  
+  .winner-slot.reveal-animation {
+      transform: rotateY(360deg); /* Simple flip animation */
+      background: linear-gradient(360deg, #002a53, #0074D9);
+      color: white;
+      border: 2px solid #000;
+  }
+  
+  /* Adjustments for two rows */
+  .winner-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr); /* 5 slots per row */
+      grid-gap: 10px;
+      justify-content: center;
+      opacity: 0.8;
+      z-index: 1;
+      max-height: 50%; /* Ensure winner slots fit within available space */
+  }
+  
+  /* Title Styling */
+.raffle-title {
+  margin-top: 10px;
+  font-size: 8vw; /* Responsive title size */
+  color: #fff;
+  text-align: center;
+  /*font-family: 'Mountains of Christmas', cursive;  Festive Google Font */
+  font-family: 'Amatic SC', cursive;
+  z-index: 1;
+  cursor: text; /* Change cursor to indicate text input */
+  text-shadow: 6px 6px #000; /* Gold shadow for holiday sparkle */
+}
+
+.prize-label {
+  /*font-family: 'Mountains of Christmas', cursive; Festive Google Font */
+  font-family: 'Amatic SC', cursive;
+  font-size: 7vw; /* Adjust font size responsively */
+  font-weight: 900;
+  font-weight: bold;
+  color: #fff; /* Deep red for Christmas vibe */
+  text-align: center;
+  margin: 10px auto;
+  padding: 5px;
+  outline: none;
+  border: none;
+  background: none;
+  cursor: text; /* Change cursor to indicate text input */
+  text-shadow: 6px 6px #000; /* Gold shadow for holiday sparkle */
+  z-index: 1;
+  margin-top: -80px;
+}
+
+.prize-label:focus {
+  border-bottom: 1px solid #444; /* Optional: highlight underline on focus */
+}

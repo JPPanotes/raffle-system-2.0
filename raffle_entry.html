@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DOTR-YEPA Raffle Draw</title>
+<link rel="icon" type="image/x-icon" href="dotr_logo.ico">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="raffle_entry.css">
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    
+  <div class="background-image-container"></div>
+
+  <div class="container text-center">
+      <img id=raffle_logo class="raffle_logo" src="xmasraffle1.png" alt="Raffle Logo" width="550" height="150">
+
+      <!-- Scroll Animation Container -->
+      <div id="scroll-container">
+          <label id="scroll-label" class="scroll-label"></label>
+      </div>
+
+      <!-- Start/Stop Button -->
+      <button id="animation-control" class="raffleButton btn btn-primary">Start Raffle</button>
+      <label for="fileInput" class="custom-file-upload" id="fileLabel">
+          <i class="fa fa-solid fa-upload"></i> Upload Names
+      </label>
+      <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="fileInput" />
+
+      <div class="dropdown-container">
+        <div class="custom-select">
+            <select id="employeeTypeSelector">
+                <option value="" disabled selected>Select Type</option>
+                <option value="all">All Employee</option>
+                <option value="JOCOS">JO/COS</option>
+                <option value="organic">Organic</option>
+            </select>
+        </div>
+    
+        <div class="custom-select">
+            <select id="numberOfWinnersSelector">
+                <option value="" disabled selected>Number of Winners</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+    </div>
+  </div>
+
+<script type="text/javascript"
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+<script src="jquery.snow.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+var snowEffectInterval = jQuery.fn.snow({
+  // min size of element (default: 20)
+  minSize: 20,
+  
+  // max size of element (default: 50)
+  maxSize: 50,
+  
+  // flake fall time multiplier (default: 20)
+  fallTimeMultiplier: 20, 
+  
+  // flake fall time difference (default: 10000)
+  fallTimeDifference: 10000, 
+  
+  // interval (miliseconds) between new element spawns (default: 500)
+  spawnInterval: 100, 
+  
+  // jQuery element to apply snow effect on (should work on any block element) (default: body)
+  target: jQuery("body"),
+  
+  //elements to use in generating snow effect
+  elements	: [
+  /*
+    // Element #1
+    { 
+      // html element to be spawned for this element
+      html: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>',
+      // hex color for this element - works only for font based icons
+      color: 'rgba(255, 255, 255, 0.6)'
+    },
+    
+    // Element #2
+    { 
+      // html element to be spawned for this element
+      html: '<i class="fa fa-bell-o" aria-hidden="true"></i>',
+      // hex color for this element - works only for font based icons
+      color: 'rgba(255, 0, 0, 0.6)'
+    },
+    
+    // Element #3
+    { 
+      // html element to be spawned for this element
+      html: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>',
+      // hex color for this element - works only for font based icons
+      color: 'rgba(255, 255, 255, 0.6)'
+    },
+    
+    // Element #4
+    {
+      // html element to be spawned for this element
+      html: '<i class="fa fa-music" aria-hidden="true"></i>',
+      // hex color for this element - works only for font based icons
+      color: 'rgba(65, 105, 225, 0.6)'
+    },
+    
+    // Element #5
+    { 
+      // html element to be spawned for this element
+      html: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>',
+      // hex color for this element - works only for font based iconsClick
+      color: 'rgba(255, 255, 255, 0.6)'
+    },
+*/
+    //TROPICAL ELEMENTS
+    
+    { 
+        html: '<img src="element_pineapple.png" alt="pineapple" style="width: 50px; height: 65px; opacity: 0.6;"/>', // Use an image path
+        color: 'rgba(255, 223, 0, 0.8)' // Yellow for the pineapple
+    },
+
+    // Element #2 - Beach Wave (using an image)
+    { 
+        html: '<img src="element_wave.png" alt="wave" style="width: 50px; height: 50px; opacity: 0.6;"/>', // Use an image path
+        color: 'rgba(0, 191, 255, 0.6)' // Light blue for the wave
+    },
+
+    // Element #3 - Flower (using an image)
+    { 
+        html: '<img src="element_flower.png" alt="flower" style="width: 50px; height: 50px; opacity: 0.6;"/>', // Use an image path
+        color: 'rgba(255, 105, 180, 0.8)' // Pink for the flower
+    },
+
+    // Element #4 - Sun (using an image)
+    {
+        html: '<img src="element_sun.png" alt="sun" style="width: 50px; height: 50px; opacity: 0.6;"/>', // Use an image path
+        color: 'rgba(255, 204, 0, 0.8)' // Yellow for the sun
+    },
+
+    // Element #5 - Crab (using an image)
+    { 
+        html: '<img src="element_crab.png" alt="crab" style="width: 50px; height: 50px; opacity: 0.6;"/>', // Use an image path
+        color: 'rgba(255, 99, 71, 0.8)' // Red for the crab
+    },
+    
+  ]
+});
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--====================== END OF SNOW ANIMATION ===================================== -->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="lucky_draw2.js"></script>
+    <!--<script src="jquery.snow.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+
+
+</body>
+</html>
