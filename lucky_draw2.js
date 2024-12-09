@@ -199,7 +199,7 @@ function startLuckyDraw(employeeType) {
                 const empNumber = row['Employee Number'];
                 return (
                     (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') ||
-                     empNumber.startsWith('CO-') || empNumber.startsWith('Co-')) &&
+                     empNumber.startsWith('CS-') || empNumber.startsWith('Cs-')) &&
                     !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
                 );
             })
@@ -210,7 +210,7 @@ function startLuckyDraw(employeeType) {
                 const empNumber = row['Employee Number'];
                 return (
                     !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') &&
-                    !empNumber.startsWith('CO-') && !empNumber.startsWith('Co-') &&
+                    !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
                     !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
                 );
             })
@@ -402,7 +402,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
-                 empNumber.startsWith('CO-') || empNumber.startsWith('Co-')) &&
+                 empNumber.startsWith('CS-') || empNumber.startsWith('Cs-')) &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
             );
         })
@@ -413,7 +413,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') && 
-                !empNumber.startsWith('CO-') && !empNumber.startsWith('Co-') &&
+                !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
             ));
         })
