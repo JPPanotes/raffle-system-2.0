@@ -129,112 +129,102 @@ window.addEventListener('contextmenu', function (event) {
 
 //LUCKY DRAW ANIMATION
 document.addEventListener('DOMContentLoaded', function () {
-  const winnerLabel = document.getElementById('scroll-label');
-  const startButton = document.getElementById('animation-control');
-  const fileInput = document.getElementById('fileInput');
-  const fileLabel = document.getElementById('fileLabel');
-  const customSelectDiv = document.querySelector('.custom-select');
-  const raffleLogo = document.getElementById('raffle_logo');
-  let employeeNames = [];
-  let allEmployeeData = []; // Add this variable
+    const winnerLabel = document.getElementById('scroll-label');
+    const startButton = document.getElementById('animation-control');
+    const fileInput = document.getElementById('fileInput');
+    const fileLabel = document.getElementById('fileLabel');
+    const customSelectDiv = document.querySelector('.custom-select');
+    const raffleLogo = document.getElementById('raffle_logo');
+    let employeeNames = [];
+    let allEmployeeData = []; // Add this variable
 
-  function loadCSV() {
-    const file = fileInput.files[0];
-    if (!file) {
-        alert('Please select a file.');
-        return;
-    }
-    fileInput.style.display = 'none';
-    fileLabel.style.display = 'none';
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const csvData = e.target.result;
-        Papa.parse(csvData, {
-            header: true,
-            complete: function (results) {
-                employeeNames = results.data
-                    .map(row => row['Employee Name'])
-                    .filter(name => name !== null && name !== undefined && name.trim() !== '');
+    function loadCSV() {
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select a file.');
+            return;
+        }
+        fileInput.style.display = 'none';
+        fileLabel.style.display = 'none';
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const csvData = e.target.result;
+            Papa.parse(csvData, {
+                header: true,
+                complete: function (results) {
+                    employeeNames = results.data
+                        .map(row => row['Employee Name'])
+                        .filter(name => name !== null && name !== undefined && name.trim() !== '');
     
-                // Save all CSV data
-                allEmployeeData = results.data;
+// Save all CSV data
+allEmployeeData = results.data;
     
-                // Sort the CSV data based on Employee Number
-                allEmployeeData.sort((a, b) => {
-                    const empNumberA = parseInt(a['Employee Number'].replace(/\D/g, ''), 10);
-                    const empNumberB = parseInt(b['Employee Number'].replace(/\D/g, ''), 10);
-                    return empNumberA - empNumberB;
-                });
-            }
-        });
-    };
+// Sort the CSV data based on Employee Number
+allEmployeeData.sort((a, b) => {
+    const empNumberA = parseInt(a['Employee Number'].replace(/\D/g, ''), 10);
+    const empNumberB = parseInt(b['Employee Number'].replace(/\D/g, ''), 10);
+    return empNumberA - empNumberB;
+});
+}
+});
+};
 
-    reader.readAsText(file);
+reader.readAsText(file);
 
 }
 
-    fileInput.addEventListener('change', loadCSV);
+fileInput.addEventListener('change', loadCSV);
 
 
-    let isAnimating = false;
+let isAnimating = false;
 let animationInterval;
 let slowdownInterval1;
 let slowdownInterval2;
 let prizeCount = 1; // Variable to track the prize count (starts at 1)
-let selectedWinners = []; // Keep track of all selected winners
-
 function startLuckyDraw(employeeType) {
     if (employeeNames.length === 0) {
-        loadCSV(); // Load CSV if not already loaded
+        // Load CSV data if the employeeNames array is empty
+        loadCSV();
         return;
-    }
-    cleanupBeforeNewDraw();
+    }   
+    cleanupBeforeNewDraw()
     raffleLogo.style.display = 'inline-block';
-
     // Filter employees based on type
-    let filteredEmployees;
-    if (employeeType === 'JOCOS') {
-        filteredEmployees = allEmployeeData
-            .filter(row => {
-                const empNumber = row['Employee Number'];
-                return (
-                    (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') ||
-                     empNumber.startsWith('CS-') || empNumber.startsWith('Cs-')) &&
-                    !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
-                );
-            })
-            .map(row => row['Employee Name']);
-    } else if (employeeType === 'organic') {
-        filteredEmployees = allEmployeeData
-            .filter(row => {
-                const empNumber = row['Employee Number'];
-                return (
-                    !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') &&
-                    !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
-                    !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
-                );
-            })
-            .map(row => row['Employee Name']);
-    } else {
-        // Exclude PA/Pa for "All" selection
-        filteredEmployees = allEmployeeData
-            .filter(row => {
-                const empNumber = row['Employee Number'];
-                return !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-'));
-            })
-            .map(row => row['Employee Name']);
-    }
-
-    // Exclude already-selected winners
-    employeeNames = filteredEmployees.filter(name => !selectedWinners.includes(name));
-
-    if (employeeNames.length === 0) {
-        alert('No eligible employees left to draw.');
-        return;
-    }
-
+if (employeeType === 'JOCOS') {
+    employeeNames = allEmployeeData
+        .filter(row => {
+            const empNumber = row['Employee Number'];
+            return (
+                (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
+                 empNumber.startsWith('CO-') || empNumber.startsWith('Co-')) &&
+                !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
+            );
+        })
+        .map(row => row['Employee Name']);
+} else if (employeeType === 'organic') {
+    employeeNames = allEmployeeData
+        .filter(row => {
+            const empNumber = row['Employee Number'];
+            return (
+                !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') && 
+                !empNumber.startsWith('CO-') && !empNumber.startsWith('Co-') &&
+                !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
+            ));
+        })
+        .map(row => row['Employee Name']);
+} else {
+    // Exclude PA/Pa for "All" selection
+    employeeNames = allEmployeeData
+        .filter(row => {
+            const empNumber = row['Employee Number'];
+            return !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-'));
+        })
+        .map(row => row['Employee Name']);
+}
+    
     isAnimating = true;
     startButton.textContent = 'Stop';
+
     let startTime = Date.now();
 
     animationInterval = setInterval(() => {
@@ -245,35 +235,40 @@ function startLuckyDraw(employeeType) {
         employeeTypeSelector.style.display = 'none';
         customSelectDiv.style.display = 'none';
         numberOfWinnersSelector.parentElement.style.display = 'none';
+        
 
         if (elapsedTime < 6000) {
+            // Normal speed animation
             animate();
         } else if (elapsedTime < 7500) {
+            // First slowdown interval
             if (!slowdownInterval1) {
-                clearInterval(slowdownInterval2);
+                clearInterval(slowdownInterval2); // Clear the second slowdown interval if it exists
                 slowdownInterval1 = setInterval(() => {
                     animate();
-                }, 100);
+                }, 100); // Adjust the first slowdown interval as needed (milliseconds)
             }
         } else {
+            // Second slowdown interval
             if (!slowdownInterval2) {
-                clearInterval(slowdownInterval1);
+                clearInterval(slowdownInterval1); // Clear the first slowdown interval if it exists
                 slowdownInterval2 = setInterval(() => {
                     animate();
-                }, 300);
+                }, 300); // Adjust the second slowdown interval as needed (milliseconds)
             }
         }
 
         if (elapsedTime >= 10000) {
             stopAnimation();
+            
         }
-    }, 20);
+    }, 20); // Change the interval as needed (milliseconds)
 
+    // Automatically stop the animation after 10 seconds
     setTimeout(() => {
         stopAnimation();
-    }, 10000);
+    }, 10000); // 10 seconds in milliseconds
 }
-
 
 function animate() {
     const randomIndex = Math.floor(Math.random() * employeeNames.length);
@@ -402,7 +397,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
-                 empNumber.startsWith('CS-') || empNumber.startsWith('Cs-')) &&
+                 empNumber.startsWith('CO-') || empNumber.startsWith('Co-')) &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
             );
         })
@@ -413,7 +408,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') && 
-                !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
+                !empNumber.startsWith('CO-') && !empNumber.startsWith('Co-') &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
             ));
         })
@@ -429,128 +424,130 @@ if (employeeType === 'JOCOS') {
 }
 
 
-    // Step 2: Select winners and keep "?????" placeholders
-    const winnerSlots = [...winnerContainer.children];
-    const selectedWinners = [];
+// Step 2: Select winners and keep "?????" placeholders
+const winnerSlots = [...winnerContainer.children];
+const selectedWinners = [];
 
-    async function selectWinners() {
-        for (let i = 0; i < numberOfWinners; i++) {
-            const currentSlot = winnerSlots[i].querySelector('.slot-text');
-    
-            await new Promise(resolve => {
-                let animationInterval = setInterval(() => {
-                    const randomIndex = Math.floor(Math.random() * employeeNames.length);
-                    currentSlot.textContent = employeeNames[randomIndex];
-                }, 50);
-    
-                setTimeout(() => {
-                    clearInterval(animationInterval);
-    
-                    currentSlot.textContent = '?????';
-                    const randomIndex = Math.floor(Math.random() * employeeNames.length);
-                    const winner = employeeNames[randomIndex];
-                    selectedWinners.push(winner); // Add winner to the global list
-                    employeeNames.splice(randomIndex, 1); // Remove winner from the pool
-                    resolve();
-                }, 2000);
-            });s
-        }
+async function selectWinners() {
+    for (let i = 0; i < numberOfWinners; i++) {
+        const currentSlot = winnerSlots[i].querySelector('.slot-text');
+
+        // Animate with random names
+        await new Promise(resolve => {
+            let animationInterval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * employeeNames.length);
+                currentSlot.textContent = employeeNames[randomIndex];
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(animationInterval);
+
+                // Display "?????" and finalize winner
+                currentSlot.textContent = '?????';
+                const randomIndex = Math.floor(Math.random() * employeeNames.length);
+                const winner = employeeNames[randomIndex];
+                selectedWinners.push(winner);
+                employeeNames.splice(randomIndex, 1);
+                resolve();
+            }, 2000);
+        });
     }
+}
 
-    // Function to create and download the Excel file
+// Function to create and download the Excel file
 // Function to create and download the Excel file
 function createExcelFile(winners, prizeName) {
-    const wb = XLSX.utils.book_new(); // Create a new workbook
+const wb = XLSX.utils.book_new(); // Create a new workbook
 
-    // Format the winners data
-    const winnersData = winners.map((winner, index) => {
-        return {
-            Rank: index + 1,
-            Winner: winner
-        };
-    });
+// Format the winners data
+const winnersData = winners.map((winner, index) => {
+    return {
+        Rank: index + 1,
+        Winner: winner
+    };
+});
 
-    // Create a new worksheet
-    const ws = XLSX.utils.json_to_sheet(winnersData);
+// Create a new worksheet
+const ws = XLSX.utils.json_to_sheet(winnersData);
 
-    // Add the sheet to the workbook
-    const sheetName = prizeName || 'Sheet#'; // Use prize name as the sheet name, default to 'Sheet#'
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+// Add the sheet to the workbook
+const sheetName = prizeName || 'Sheet#'; // Use prize name as the sheet name, default to 'Sheet#'
+XLSX.utils.book_append_sheet(wb, ws, sheetName);
 
-        // Generate the Excel file name with prize name included (sanitize it for file name)
-        const sanitizedPrizeName = prizeName ? prizeName.replace(/[\/\\?%*:|"<>]/g, '_') : 'Raffle';  // Replace invalid characters
+    // Generate the Excel file name with prize name included (sanitize it for file name)
+    const sanitizedPrizeName = prizeName ? prizeName.replace(/[\/\\?%*:|"<>]/g, '_') : 'Raffle';  // Replace invalid characters
         const fileName = `Raffle_Winners_${sanitizedPrizeName}.xlsx`;  // Use prize name in the file name
-    
-        // Generate the Excel file and trigger download with the dynamic file name
-        XLSX.writeFile(wb, fileName);
+
+    // Generate the Excel file and trigger download with the dynamic file name
+    XLSX.writeFile(wb, fileName);
 }
 
     // Step 3: Reveal winners with animation
     // Modified revealWinners function with Excel creation
-async function revealWinners() {
-    const revealDelay = 500; // Delay between each winner reveal in ms
-    const bufferTime = 1000; // Extra buffer time after all winners are revealed
+    async function revealWinners() {
+        const revealDelay = 500; // Delay between each winner reveal in ms
+        const bufferTime = 1000; // Extra buffer time after all winners are revealed
+        
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Initial delay before reveal
     
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Initial delay before reveal
-
-    winnerSlots.forEach((slot, index) => {
-        const slotText = slot.querySelector('.slot-text');
+        winnerSlots.forEach((slot, index) => {
+            const slotText = slot.querySelector('.slot-text');
+            setTimeout(() => {
+                slot.classList.add('reveal-animation');
+                slotText.textContent = selectedWinners[index];
+            }, index * revealDelay); // Delay for each winner based on their index
+        });
+    
+        // Calculate total delay: (number of winners * revealDelay) + bufferTime
+        const totalDelay = numberOfWinners * revealDelay + bufferTime;
+        
         setTimeout(() => {
-            slot.classList.add('reveal-animation');
-            slotText.textContent = selectedWinners[index];
-        }, index * revealDelay); // Delay for each winner based on their index
-    });
-
-    // Calculate total delay: (number of winners * revealDelay) + bufferTime
-    const totalDelay = numberOfWinners * revealDelay + bufferTime;
+            titleElement.textContent = 'Congratulations to All Winners!';
     
-    setTimeout(() => {
-        titleElement.textContent = 'Congratulations to All Winners!';
-
-        // Create a container for the two dropdowns
-        const dropdownsContainer = document.createElement('div');
-        dropdownsContainer.style.display = 'flex';
-        dropdownsContainer.style.alignItems = 'center';  // Vertically align items
-        dropdownsContainer.style.gap = '10px';  // Optional: Add space between elements
+            // Create a container for the two dropdowns
+            const dropdownsContainer = document.createElement('div');
+            dropdownsContainer.style.display = 'flex';
+            dropdownsContainer.style.alignItems = 'center';  // Vertically align items
+            dropdownsContainer.style.gap = '10px';  // Optional: Add space between elements
+        
+            // Append the two dropdowns to the container
+            dropdownsContainer.appendChild(customSelectDiv);
+            dropdownsContainer.appendChild(numberOfWinnersSelector.parentElement);
+        
+            // Move the button and the dropdowns container to the bottom
+            container.appendChild(startButton);  // Move the button to the bottom
+            container.appendChild(dropdownsContainer);  // Move the dropdown container to the bottom
+        
+            // Re-enable the button and dropdowns
+            startButton.textContent = 'Pick Another Winner';
+            startButton.style.display = 'inline-block';
+            dropdownsContainer.style.display = 'flex';
+            customSelectDiv.style.display = 'inline-block';
+            numberOfWinnersSelector.parentElement.style.display = 'inline-block';
     
-        // Append the two dropdowns to the container
-        dropdownsContainer.appendChild(customSelectDiv);
-        dropdownsContainer.appendChild(numberOfWinnersSelector.parentElement);
-    
-        // Move the button and the dropdowns container to the bottom
-        container.appendChild(startButton);  // Move the button to the bottom
-        container.appendChild(dropdownsContainer);  // Move the dropdown container to the bottom
-    
-        // Re-enable the button and dropdowns
-        startButton.textContent = 'Pick Another Winner';
-        startButton.style.display = 'inline-block';
-        dropdownsContainer.style.display = 'flex';
-        customSelectDiv.style.display = 'inline-block';
-        numberOfWinnersSelector.parentElement.style.display = 'inline-block';
-
-        // After the draw ends, create and download the Excel file with winners
-        const prizeName = prizeLabel.textContent.trim(); // Get the prize name
-        createExcelFile(selectedWinners, prizeName);  // Create Excel with the winners and prize name
-    }, totalDelay);
-}
-
-    // Function to update the title dynamically
-    function updateTitle(text) {
-        titleElement.textContent = text;
+            // After the draw ends, create and download the Excel file with winners
+            const prizeName = prizeLabel.textContent.trim(); // Get the prize name
+            createExcelFile(selectedWinners, prizeName);  // Create Excel with the winners and prize name
+        }, totalDelay);
     }
     
-
-    // Run the animations and processes
-    animateSlots()
-        .then(() => {
-            updateTitle('The Draw Has Begun!');
-            return selectWinners();
-        })
-        .then(revealWinners);
-}
-
-
-///////////////////////////TEN WINNERS RAFFLE DRAW/////////////////////////////////
+        // Function to update the title dynamically
+        function updateTitle(text) {
+            titleElement.textContent = text;
+        }
+        
+    
+        // Run the animations and processes
+        animateSlots()
+            .then(() => {
+                updateTitle('The Draw Has Begun!');
+                return selectWinners();
+            })
+            .then(revealWinners);
+    }
+    
+    
+    ///////////////////////////TEN WINNERS RAFFLE DRAW/////////////////////////////////
 
 function stopAnimation() {
     if (isAnimating) {
@@ -570,83 +567,79 @@ function stopAnimation() {
     }
 }
     
-function announceWinner(winner) {
-    if (!winner) {
-        return;
-    }
-
-    // Add the winner to the selectedWinners array
-    selectedWinners.push(winner);
-
-    // Remove the winner from allEmployeeData permanently
-    const winnerIndex = allEmployeeData.findIndex(row => row['Employee Name'] === winnerLabel.textContent);
-    if (winnerIndex !== -1) {
-        allEmployeeData.splice(winnerIndex, 1);
-    }
-
-    Swal.fire({
-        title: '<pre><img src="congrats_logo3.jpg" width="550" height="250"/></pre><br><br>',
-        html: `<h2 style="font-size: 40px">The winner is... <br></h2>` +
-              `<h1 style="font-size: 70px"<strong>${winner}</strong></h1>`,
-        color: 'black',
-        width: 850,
-        padding: 50,
-        background: '#fff url(https://i.gifer.com/6ob.gif)',
-        confirmButtonText: 'Next Draw',
-        confirmButtonColor: '#3498db',
-        customClass: {
-            title: 'congrats',
-        }
-    });
-        // Create the Excel file after the winner is announced
-    createExcelFile([winner], `Prize${prizeCount}`);
-    prizeCount++; // Increment the prize number for the next raffle
-    }
-    function createExcelFile(winners, prizeName) {
-        const wb = XLSX.utils.book_new(); // Create a new workbook
-    
-        // Format the winners data
-        const winnersData = winners.map((winner, index) => ({
-            Rank: index + 1,
-            Winner: winner
-        }));
-    
-        // Create a new worksheet
-        const ws = XLSX.utils.json_to_sheet(winnersData);
-    
-        // Add the sheet to the workbook
-        const sheetName = `Raffle_1Winner_${prizeName}`; // Use prize name as the sheet name
-        XLSX.utils.book_append_sheet(wb, ws, sheetName);
-    
-        // Generate the Excel file and trigger download
-        const fileName = `Raffle_1Winner_${prizeName}.xlsx`; // Name the file with the prize number
-        XLSX.writeFile(wb, fileName);
-    }
-    
-    startButton.addEventListener('click', () => {
-        const employeeTypeSelector = document.getElementById('employeeTypeSelector');
-        const selectedEmployeeType = employeeTypeSelector.value;
-        const numberOfWinnersSelector = document.getElementById('numberOfWinnersSelector');
-        const selectedNumberOfWinners = parseInt(numberOfWinnersSelector.value, 10);
-    
-        if (!selectedEmployeeType) {
-            alert('Please select an employee type.');
+    function announceWinner(winner) {
+        if (!winner) {
             return;
         }
-    
-        if (!selectedNumberOfWinners) {
-            alert('Please select the number of winners.');
-            return;
+        // Remove the winner from allEmployeeData permanently
+        const winnerIndex = allEmployeeData.findIndex(row => row['Employee Name'] === winnerLabel.textContent);
+        if (winnerIndex !== -1) {
+            allEmployeeData.splice(winnerIndex, 1);
         }
     
-        // Conditional check for number of winners
-        if (selectedNumberOfWinners === 1) {
-            // Run the single-winner animation
-            startLuckyDraw(selectedEmployeeType);
-        } else {
-            // Run the multiple-winners animation
-            startRaffleWithMultipleWinners(selectedEmployeeType, selectedNumberOfWinners);
+        Swal.fire({
+            title: '<pre><img src="congrats_logo3.jpg" width="550" height="250"/></pre><br><br>',
+            html: `<h2 style="font-size: 40px">The winner is... <br></h2>` +
+                  `<h1 style="font-size: 70px"<strong>${winner}</strong></h1>`,
+            color: 'black',
+            width: 850,
+            padding: 50,
+            background: '#fff url(https://i.gifer.com/6ob.gif)',
+            confirmButtonText: 'Next Draw',
+            confirmButtonColor: '#3498db',
+            customClass: {
+                title: 'congrats',
+            }
+        });
+            // Create the Excel file after the winner is announced
+        createExcelFile([winner], `Prize${prizeCount}`);
+        prizeCount++; // Increment the prize number for the next raffle
         }
+        function createExcelFile(winners, prizeName) {
+            const wb = XLSX.utils.book_new(); // Create a new workbook
+        
+            // Format the winners data
+            const winnersData = winners.map((winner, index) => ({
+                Rank: index + 1,
+                Winner: winner
+            }));
+        
+            // Create a new worksheet
+            const ws = XLSX.utils.json_to_sheet(winnersData);
+        
+            // Add the sheet to the workbook
+            const sheetName = `Raffle_1Winner_${prizeName}`; // Use prize name as the sheet name
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+        
+            // Generate the Excel file and trigger download
+            const fileName = `Raffle_1Winner_${prizeName}.xlsx`; // Name the file with the prize number
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        startButton.addEventListener('click', () => {
+            const employeeTypeSelector = document.getElementById('employeeTypeSelector');
+            const selectedEmployeeType = employeeTypeSelector.value;
+            const numberOfWinnersSelector = document.getElementById('numberOfWinnersSelector');
+            const selectedNumberOfWinners = parseInt(numberOfWinnersSelector.value, 10);
+        
+            if (!selectedEmployeeType) {
+                alert('Please select an employee type.');
+                return;
+            }
+        
+            if (!selectedNumberOfWinners) {
+                alert('Please select the number of winners.');
+                return;
+            }
+        
+            // Conditional check for number of winners
+            if (selectedNumberOfWinners === 1) {
+                // Run the single-winner animation
+                startLuckyDraw(selectedEmployeeType);
+            } else {
+                // Run the multiple-winners animation
+                startRaffleWithMultipleWinners(selectedEmployeeType, selectedNumberOfWinners);
+            }
+        });
+        
     });
-    
-});
