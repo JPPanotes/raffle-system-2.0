@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const raffleLogo = document.getElementById('raffle_logo');
     let employeeNames = [];
     let allEmployeeData = []; // Add this variable
+    const alreadySelectedWinners = [];
 
     function loadCSV() {
         const file = fileInput.files[0];
@@ -198,7 +199,8 @@ if (employeeType === 'JOCOS') {
                 (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
                  empNumber.startsWith('CS-') || empNumber.startsWith('Cs-') ||
                  empNumber.startsWith('COS-') || empNumber.startsWith('Cos-')) &&
-                !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
+                !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-'))  // Exclude PA/Pa
+                
             );
         })
         .map(row => row['Employee Name']);
@@ -211,6 +213,7 @@ if (employeeType === 'JOCOS') {
                 !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
                 !empNumber.startsWith('COS-') && !empNumber.startsWith('Cos-') &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
+
             ));
         })
         .map(row => row['Employee Name']);
@@ -273,8 +276,13 @@ if (employeeType === 'JOCOS') {
 }
 
 function animate() {
-    const randomIndex = Math.floor(Math.random() * employeeNames.length);
-    const winner = employeeNames[randomIndex];
+    let randomIndex;
+    let winner;
+    do {
+        randomIndex = Math.floor(Math.random() * employeeNames.length);
+        winner = employeeNames[randomIndex];
+    } while (alreadySelectedWinners.includes(winner));
+
     winnerLabel.textContent = winner;
 }
 
@@ -445,8 +453,14 @@ async function selectWinners() {
         // Animate with random names
         await new Promise(resolve => {
             let animationInterval = setInterval(() => {
-                const randomIndex = Math.floor(Math.random() * employeeNames.length);
-                currentSlot.textContent = employeeNames[randomIndex];
+                let randomIndex;
+                let randomName;
+                do {
+                    randomIndex = Math.floor(Math.random() * employeeNames.length);
+                    randomName = employeeNames[randomIndex];
+                } while (alreadySelectedWinners.includes(randomName));
+
+                currentSlot.textContent = randomName;
             }, 50);
 
             setTimeout(() => {
@@ -454,15 +468,22 @@ async function selectWinners() {
 
                 // Display "?????" and finalize winner
                 currentSlot.textContent = '?????';
-                const randomIndex = Math.floor(Math.random() * employeeNames.length);
-                const winner = employeeNames[randomIndex];
+                let randomIndex;
+                let winner;
+                do {
+                    randomIndex = Math.floor(Math.random() * employeeNames.length);
+                    winner = employeeNames[randomIndex];
+                } while (alreadySelectedWinners.includes(winner));
+
                 selectedWinners.push(winner);
-                employeeNames.splice(randomIndex, 1);
+                alreadySelectedWinners.push(winner); // Add to the already selected list
+                employeeNames.splice(randomIndex, 1); // Remove from employee list
                 resolve();
             }, 2000);
         });
     }
 }
+
 
 // Function to create and download the Excel file
 // Function to create and download the Excel file
@@ -559,23 +580,29 @@ XLSX.utils.book_append_sheet(wb, ws, sheetName);
     
     ///////////////////////////TEN WINNERS RAFFLE DRAW/////////////////////////////////
 
-function stopAnimation() {
-    if (isAnimating) {
-        clearInterval(animationInterval);
-        clearInterval(slowdownInterval1);
-        clearInterval(slowdownInterval2);
-        slowdownInterval1 = null;
-        slowdownInterval2 = null;
-        isAnimating = false;
-        startButton.textContent = 'Pick Another Winner';
-        setTimeout(() => {
-            announceWinner(winnerLabel.textContent);
-        }, 800);
-        startButton.style.display = 'inline-block';
-        customSelectDiv.style.display = 'inline-block';
-        numberOfWinnersSelector.parentElement.style.display = 'inline-block';
+    function stopAnimation() {
+        if (isAnimating) {
+            clearInterval(animationInterval);
+            clearInterval(slowdownInterval1);
+            clearInterval(slowdownInterval2);
+            slowdownInterval1 = null;
+            slowdownInterval2 = null;
+            isAnimating = false;
+            startButton.textContent = 'Pick Another Winner';
+            setTimeout(() => {
+                const finalWinner = winnerLabel.textContent;
+                alreadySelectedWinners.push(finalWinner); // Add to the already selected list
+                const winnerIndex = allEmployeeData.findIndex(row => row['Employee Name'] === finalWinner);
+                if (winnerIndex !== -1) {
+                    allEmployeeData.splice(winnerIndex, 1); // Remove from main employee data
+                }
+                announceWinner(finalWinner);
+            }, 800);
+            startButton.style.display = 'inline-block';
+            customSelectDiv.style.display = 'inline-block';
+            numberOfWinnersSelector.parentElement.style.display = 'inline-block';
+        }
     }
-}
     
     function announceWinner(winner) {
         if (!winner) {
