@@ -196,8 +196,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
-                 empNumber.startsWith('CS-') || empNumber.startsWith('CS-') ||
-                 empNumber.startswith('COS-' || empNumber.startswith('Cos-')) &&
+                 empNumber.startsWith('CS-') || empNumber.startsWith('Cs-')) &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
             );
         })
@@ -209,7 +208,6 @@ if (employeeType === 'JOCOS') {
             return (
                 !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') && 
                 !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
-                !empNumber.startsWith('COS-') && !empNumber.startsWith('Cos-') &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
             ));
         })
@@ -399,8 +397,7 @@ if (employeeType === 'JOCOS') {
             const empNumber = row['Employee Number'];
             return (
                 (empNumber.startsWith('JO-') || empNumber.startsWith('Jo-') || 
-                 empNumber.startsWith('CS-') || empNumber.startsWith('CS-') ||
-                 empNumber.startswith('COS-' || empNumber.startswith('Cos-')) &&
+                 empNumber.startsWith('CS-') || empNumber.startsWith('CS-')) &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-')) // Exclude PA/Pa
             );
         })
@@ -412,7 +409,6 @@ if (employeeType === 'JOCOS') {
             return (
                 !empNumber.startsWith('JO-') && !empNumber.startsWith('Jo-') && 
                 !empNumber.startsWith('CS-') && !empNumber.startsWith('Cs-') &&
-                !empNumber.startsWith('COS-') && !empNumber.startsWith('Cos-') &&
                 !(empNumber.startsWith('PA-') || empNumber.startsWith('Pa-') // Exclude PA/Pa
             ));
         })
