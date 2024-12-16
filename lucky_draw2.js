@@ -289,13 +289,16 @@ function setSlotSize(winnerContainer, numberOfWinners) {
         slotSize = { width: '700px', height: '200px' };
         fontSize = '42px';
     } else if (numberOfWinners === 3) {
-        slotSize = { width: '450px', height: '200px' };
+        slotSize = { width: '500px', height: '200px' };
         fontSize = '36px';
+    } else if (numberOfWinners === 4) {
+        slotSize = { width: '450px', height: '200px' };
+        fontSize = '30px';
     } else if (numberOfWinners === 5) {
-        slotSize = { width: '300px', height: '200px' };
+        slotSize = { width: '320px', height: '200px' };
         fontSize = '30px';
     } else if (numberOfWinners === 10) {
-        slotSize = { width: '250px', height: '150px' };
+        slotSize = { width: '300px', height: '150px' };
         fontSize = '26px';
     }
 
@@ -329,7 +332,7 @@ function startRaffleWithMultipleWinners(employeeType, numberOfWinners) {
         return;
     }
     cleanupBeforeNewDraw();
-    // Step 1: Create slots dynamically based on the number of winners
+
     const container = document.querySelector('.container');
     startButton.style.display = 'none';
     fileInput.style.display = 'none';
@@ -359,6 +362,9 @@ function startRaffleWithMultipleWinners(employeeType, numberOfWinners) {
         winnerContainer.style.gridTemplateColumns = 'repeat(2, 1fr)'; // Center 2 winners
     } else if (numberOfWinners === 3) {
         winnerContainer.style.gridTemplateColumns = 'repeat(3, 1fr)'; // Center 3 winners
+    } else if (numberOfWinners === 4) {
+        winnerContainer.style.gridTemplateColumns = 'repeat(4, 1fr)'; // 2 columns for 2 rows
+        
     } else if (numberOfWinners === 5 || numberOfWinners === 10) {
         winnerContainer.style.gridTemplateColumns = 'repeat(5, 1fr)'; // Default to 5 per row
     }
@@ -369,7 +375,7 @@ function startRaffleWithMultipleWinners(employeeType, numberOfWinners) {
         winnerSlot.innerHTML = `<div class="slot-number">${i}</div><div class="slot-text">Winner</div>`;
         winnerContainer.appendChild(winnerSlot);
     }
-    
+
     container.appendChild(winnerContainer);
     
     // Adjust the size of the slots based on the number of winners
